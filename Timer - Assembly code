@@ -1,0 +1,83 @@
+;Assembly code to count down from 60 to 0 on 7-Segment Display (8085 kit with 8255 peripheral controller)
+;<Program title>
+
+jmp start
+
+;data
+
+
+;code
+start: nop
+	mvi a, 80h
+	out 43h
+	lxi h, 8300h
+fresh:	mvi d, 07h
+	mvi e, 0ah
+digitx:	dcr d
+digity:	dcr e
+	call delay
+	mvi c, 08h
+	mov l, d
+	mov a, m
+l1:	rlc
+	mov b, a
+	out 41h
+	mvi a, 01h
+	out 42h
+	dcr a
+	out 42h
+	mov a, b
+	dcr c
+	jnz l1
+	mvi c, 08h
+	mov l, e
+	mov a, m
+l2:	rlc
+	mov b, a
+	out 41h
+	mvi a, 01h
+	out 42h
+	dcr a
+	out 42h
+	mov a, b
+	dcr c
+	jnz l2
+	mvi c, 08h
+	mvi a, 0ffH
+l3:	rlc
+	mov b, a
+	out 41h
+	mvi a, 01h
+	out 42h
+	dcr a
+	out 42h
+	mov a, b
+	dcr c
+	jnz l3
+	mvi c, 08h
+	mvi a, 0ffh
+l4:	rlc
+	mov b, a
+	out 41h
+	mvi a, 01h
+	out 42h
+	dcr a
+	out 42h
+	mov a, b
+	dcr c
+	jnz l4
+	inr e
+	dcr e
+	jnz digity
+	mvi e, 0ah
+	inr d
+	dcr d
+	jnz digitx
+	jmp fresh
+hlt
+delay: lxi b, 0001h
+delayi:	dcx b
+	mov a, b
+	ora c
+	jnz delayi
+ret
